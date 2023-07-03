@@ -3,29 +3,32 @@ const operatorKeys = document.querySelectorAll(".operator");
 const clearKey = document.querySelector(".clear");
 const deleteKey = document.querySelector(".delete");
 const equalsKey = document.querySelector(".equals");
+const decimalKey = document.querySelector(".decimal");
 const currentDisplayText = document.querySelector(".screen__output__text");
 const previousDisplayText = document.querySelector(".screen__previous__output");
 
-//Current display is the display that shows the current number being typed
 let currentDisplay = "";
-
-//Previous display is the display that shows the previous result
 let previousDisplay = "";
-
-//Operator is the operator that is being used
 let operator = "";
-
-//Result is the result of the calculation
 let result = "";
 
 numberKeys.forEach((number) => {
 	number.addEventListener("click", () => {
-		// limit the number of digits to 9
+		// limit the number of digits to 9 on each operand ingnoring the operator
 		if (currentDisplay.length < 9) {
 			currentDisplay += number.textContent;
 			currentDisplayText.textContent = currentDisplay;
 		}
 	});
+});
+
+decimalKey.addEventListener("click", () => {
+	// check if already a decimal point and dont allow more than one(e.g. 1.1.1), but allow (e.g. 1.1 + 1.1)
+
+	if (currentDisplay.includes(".")) return;
+
+	currentDisplay += decimalKey.textContent;
+	currentDisplayText.textContent = currentDisplay;
 });
 
 operatorKeys.forEach((operatorKey) => {
@@ -69,13 +72,14 @@ function clear() {
 }
 
 function deleteNumber() {
-	if (currentDisplay === "" || currentDisplay === "0") return;
+	if (currentDisplay === "" || currentDisplay === "0" || currentDisplay === result) return;
 
 	if (currentDisplay.length === 1) {
 		currentDisplay = "";
 		currentDisplayText.textContent = "0";
 		return;
 	}
+
 	currentDisplay = currentDisplay.slice(0, -1);
 	currentDisplayText.textContent = currentDisplay;
 }
@@ -90,14 +94,16 @@ function calculate() {
 	// split the string into an array of numbers
 	let numbers = currentDisplay.split(operator);
 
-	console.log(numbers);
 	// convert the array of strings to an array of numbers
 	numbers = numbers.map((number) => parseFloat(number));
 
 	// check if the second number is 0 and the operator is division
 	if (numbers[1] === 0 && operator === "÷") {
-		alert("You can't divide by 0");
-		clear();
+		currentDisplayText.textContent = "You can't divide by 0 >:(";
+		// clear the display after 2 seconds
+		setTimeout(() => {
+			clear();
+		}, 2000);
 		return;
 	}
 
@@ -119,6 +125,9 @@ function calculate() {
 			return;
 	}
 
+	// convert the result to a number
+	result = Number(result);
+
 	// check if the result is a whole number
 	if (Number.isInteger(result)) {
 		result = result.toString();
@@ -126,7 +135,13 @@ function calculate() {
 
 	// check if the result is a decimal number
 	if (!Number.isInteger(result)) {
-		result = result.toFixed(2);
+		// Check if the result is a whole number
+		if (result % 1 === 0) {
+			result = result.toString();
+		} else {
+			// round the result to 4 decimal places
+			result = result.toFixed(2);
+		}
 	}
 
 	// check if the result is too long
@@ -140,10 +155,4 @@ function calculate() {
 	previousDisplayText.textContent = previousDisplay;
 	currentDisplayText.textContent = currentDisplay;
 	operator = "";
-}
-
-function toFixed() {
-	if (!Number.isInteger(result)) {
-		result = result.toFixed(2);
-	}
 }
