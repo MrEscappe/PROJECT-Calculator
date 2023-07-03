@@ -26,3 +26,5 @@ This project was a good opportunity to work more with JavaScript and DOM manipul
 - [ ] Dont allow the user to input more than one decimal point
 
 ## Live Demo
+
+[Live Demo Link](https://mrescappe.github.io/PROJECT-Calculator/)
