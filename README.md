@@ -19,3 +19,10 @@ This Project is part of The Odin Project Curriculum. The goal is to create a bro
 ## Thoughts on the Project
 
 This project was a good opportunity to work more with JavaScript and DOM manipulation. I was able to practice using event listeners and how to use them to update the DOM.
+
+## Things that I need to improve
+
+- [ ] Add keyboard support
+- [ ] Dont allow the user to input more than one decimal point
+
+## Live Demo
